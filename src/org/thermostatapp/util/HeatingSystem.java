@@ -21,7 +21,7 @@ import android.util.Xml;
 
 public class HeatingSystem {
 
-	public static String BASE_ADDRESS = "http://82.136.208.229:8080/test";
+	public static String BASE_ADDRESS = "http://192.168.1.149:8080/test";
 	public static String WEEK_PROGRAM_ADDRESS = BASE_ADDRESS + "/" + "weekProgram";
 	private final static int TIME_OUT = 10000; // in milliseconds.
 
@@ -324,7 +324,7 @@ public class HeatingSystem {
 
 		String link = "";
 		boolean match = false;
-		String[] valid_names = { "day", "time", "currentTemperature",
+		String[] valid_names = { "day", "time", "currentTemperature", "targetTemperature",
 				"dayTemperature", "nightTemperature", "weekProgramState" };
 		for (int i = 0; i < valid_names.length; i++) {
 			if (attribute_name.equalsIgnoreCase(valid_names[i])) {
