@@ -17,13 +17,13 @@ public class ThermostatModel {
 	public WeekProgramModel weekProgram;
 	
 	public ThermostatModel(){
-		this.current_day = HeatingSystem.get("current_day");
-		this.time = HeatingSystem.get("time");
-		this.current_temperature = HeatingSystem.get("currentTemperature");
-		this.day_temperature = HeatingSystem.get("day_temperature");
-		this.night_temperature = HeatingSystem.get("target_temperature");
-		this.weekProgram = new WeekProgramModel();
 		try {
+			this.current_day = HeatingSystem.get("current_day");
+			this.time = HeatingSystem.get("time");
+			this.current_temperature = HeatingSystem.get("currentTemperature");
+			this.day_temperature = HeatingSystem.get("day_temperature");
+			this.night_temperature = HeatingSystem.get("target_temperature");
+			this.weekProgram = new WeekProgramModel();
 			this.week_program_state = HeatingSystem.get("weekProgramState");
 		} catch (ConnectException e) {
 			// TODO Auto-generated catch block
