@@ -11,7 +11,7 @@
         android:gravity="center" >
 
         <EditText
-            android:id="@+id/timerThree"
+            android:id="@+id/timerIndicator"
             android:layout_width="174dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -23,14 +23,14 @@
         </EditText>
 
         <ImageView
-            android:id="@+id/imageThree"
+            android:id="@+id/DayNightImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/sun" />
 
         <Switch
-            android:id="@+id/switchThree"
+            android:id="@+id/switchSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />

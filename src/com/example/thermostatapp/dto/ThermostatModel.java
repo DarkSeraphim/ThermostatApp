@@ -24,11 +24,12 @@ public class ThermostatModel extends com.example.thermostatapp.util.Serializable
 
     private void init() {
         try {
-            this.current_day = HeatingSystem.get("current_day");
+            this.current_day = HeatingSystem.get("day");
             this.time = HeatingSystem.get("time");
             this.current_temperature = HeatingSystem.get("currentTemperature");
-            this.day_temperature = HeatingSystem.get("day_temperature");
-            this.night_temperature = HeatingSystem.get("target_temperature");
+            this.target_temperature = HeatingSystem.get("currentTemperature");
+            this.day_temperature = HeatingSystem.get("dayTemperature");
+            this.night_temperature = HeatingSystem.get("nightTemperature");
             this.weekProgram = new WeekProgramModel();
             this.week_program_state = HeatingSystem.get("weekProgramState");
         } catch (ConnectException e) {

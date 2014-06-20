@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
+import java.net.ConnectException;
 import java.util.List;
+
+import com.example.thermostatapp.dto.ThermostatModel;
 
 /**
  * @Author DarkSeraphim
@@ -15,38 +19,51 @@ public class SplashScreen extends Activity
     @Override
     public void onCreate(final Bundle savedInstance)
     {
+    	
         super.onCreate(savedInstance);
-        new AsyncTask<String, Void, List<String>>()
+        
+        Bundle bundle;
+        
+        new AsyncTask<String, Void, ThermostatModel>()
         {
 
             @Override
             public void onPreExecute()
             {
+               
             }
 
             @Override
-            public List<String> doInBackground(String...params)
+            public ThermostatModel doInBackground(String...params)
             {
-                // Welke data willen we hebben?
-                return null;
+				try {
+					return ThermostatModel.create();
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+	                return null;
+				}
             }
 
             @Override
-            public void onPostExecute(List<String> data)
+            public void onPostExecute(ThermostatModel data)
             {
+            	Log.d("debug", data.current_temperature);
                 if(data != null)
                 {
-                    // Parse data
+                	Bundle bundle = new Bundle();
+                	bundle.putSerializable("ThermostatModel", data);
+                	closeSplash(bundle);
                 }
-                closeSplash();
+                
             }
         }.execute();
 
     }
 
-    public void closeSplash()
+    public void closeSplash(Bundle bundle)
     {
-        Intent i = new Intent(this, Home.class);
+    	Intent i = new Intent(this, Home.class);
+    	i.putExtra("Bundle", bundle);
         this.startActivity(i);
     }
 }
