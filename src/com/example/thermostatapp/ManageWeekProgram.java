@@ -5,6 +5,11 @@ import java.net.ConnectException;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.*;
 import org.thermostatapp.util.HeatingSystem;
 import org.thermostatapp.util.InvalidInputValueException;
 
@@ -13,16 +18,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-public class ManageWeekProgram extends ActionBarActivity{
+public class ManageWeekProgram extends ActionBarActivity
+{
 	private ToggleButton vacation_mode_togglebutton;
 	private SeekBar vacation_mode_seekBar;
 	private TextView vacation_mode_temperature;
@@ -31,21 +34,24 @@ public class ManageWeekProgram extends ActionBarActivity{
 
     private AlertDialog conFailed;
 
-    public ManageWeekProgram()
-    {
-    }
-	
-	
+    WeekPagerAdapter adapter;
+
+    ViewPager pager;
+
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_manage_weekprogram);
 		
-		vacation_mode_togglebutton = (ToggleButton) findViewById(R.id.vacation_mode_togglebutton);
+		/*vacation_mode_togglebutton = (ToggleButton) findViewById(R.id.vacation_mode_togglebutton);
 		vacation_mode_seekBar = (SeekBar) findViewById(R.id.vacation_mode_seekBar);
 		vacation_mode_temperature = (TextView) findViewById(R.id.vacation_mode_temperature);
-		vacation_mode_textView = (TextView) findViewById(R.id.vacation_mode_textView);
-				
+		vacation_mode_textView = (TextView) findViewById(R.id.vacation_mode_textView);*/
+        this.adapter = new WeekPagerAdapter(getSupportFragmentManager());
+        this.pager = (ViewPager) findViewById(R.id.weekprogram_pager);
+        this.pager.setAdapter(this.adapter);
 		vacation_mode_togglebutton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -108,40 +114,50 @@ public class ManageWeekProgram extends ActionBarActivity{
                     }
                 })
                 .create();
-		
 		new GetWeekProgramState().execute();
 	}
-	
-	public void toOverview(View view){
-		Intent intent = new Intent(this, Overview.class);
-		switch(view.getId()) {
-			case R.id.monday_button:
-				intent.putExtra("day","Monday");
-				break;
-			case R.id.tuesday_button:
-				intent.putExtra("day","Tuesday");
-				break;
-			case R.id.wednesday_button:
-				intent.putExtra("day","Wednesday");
-				break;
-			case R.id.thursday_button:
-				intent.putExtra("day","Thursday");
-				break;
-			case R.id.friday_button:
-				intent.putExtra("day","Friday");
-				break;
-			case R.id.saturday_button:
-				intent.putExtra("day","Saturday");
-				break;
-			case R.id.sunday_button:
-				intent.putExtra("day","Sunday");
-				break;
-			default:
-				throw new RuntimeException("Unknown day");
-		}
-		startActivity(intent);
-	}
-	
+
+    class WeekPagerAdapter extends FragmentPagerAdapter
+    {
+
+        public WeekPagerAdapter(FragmentManager fm)
+        {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int i)
+        {
+            Fragment f = new ManageDayFragment();
+            Bundle data = new Bundle();
+            f.setArguments(data);
+            return f;
+        }
+
+        @Override
+        public int getCount()
+        {
+            return 0;
+        }
+    }
+
+    class ManageDayFragment extends Fragment
+    {
+
+        // Add some switches
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        {
+            // The last two arguments ensure LayoutParams are inflated
+            // properly.
+            View rootView = inflater.inflate(R.layout.fragment_manage_day, container, false);
+            Bundle args = getArguments();
+            // Instantiate the fields
+            return rootView;
+        }
+    }
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    getMenuInflater().inflate(R.menu.main, menu);

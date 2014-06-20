@@ -5,54 +5,72 @@ import android.os.AsyncTask;
 /**
  * @Author DarkSeraphim
  */
-public class Updater extends Thread
+public class Updater<Params, Progress, Result> extends AsyncTask<Params, Progress, Result>
 {
 
-    private boolean running = true;
+    private Params[] params;
 
-    private final AsyncTask task;
+    private final FakeAsyncTask<Params, Progress, Result> fakeTask;
 
     private final long interval;
 
-    private Updater(AsyncTask task, long interval)
+    private long start = -1;
+
+    private Updater(FakeAsyncTask<Params, Progress, Result> fakeTask, long interval)
     {
-        this.task = task;
+        this.fakeTask = fakeTask;
         this.interval = interval;
     }
 
-    @Override
-    public void start()
+    public void start(Params...params)
     {
-        this.running = true;
-        super.start();
+        this.start(-1, params);
     }
 
-    @Override
-    public void run()
+    public void start(long delay, Params...params)
     {
-        long start, delta, sleep;
-        while(this.running)
+        if(delay > 0)
         {
-            start = System.currentTimeMillis();
-            this.task.execute();
-            delta = System.currentTimeMillis() - start;
-            sleep = this.interval - delta;
-            if(sleep > 0)
+            try
             {
-                try
-                {
-                    Thread.sleep(sleep);
-                }
-                catch(InterruptedException ex)
-                {
-                    // Shh
-                }
+                Thread.sleep(delay);
+            }
+            catch(InterruptedException ex)
+            {
+                // Shh
             }
         }
+        this.params = params;
+        this.execute(params);
     }
 
-    public void cancel()
+    @Override
+    public void onPreExecute()
     {
-        this.running = false;
+        this.start = System.currentTimeMillis();
+        super.onPreExecute();
+        this.fakeTask.onPreExecute();
     }
+
+    @Override
+    public Result doInBackground(Params...params)
+    {
+        return this.fakeTask.doBackgroundTask(params);
+    }
+
+    @Override
+    public void onCancelled(Result result)
+    {
+        this.fakeTask.onCancelled();
+    }
+
+    @Override
+    public void onPostExecute(Result result)
+    {
+        this.fakeTask.onPostExecute(result);
+        long delta = System.currentTimeMillis() - start;
+        long sleep = this.interval - delta;
+        this.start(sleep, this.params);
+    }
+
 }
